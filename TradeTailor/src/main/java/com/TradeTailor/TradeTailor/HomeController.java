@@ -1,4 +1,4 @@
-package com.TradeTailor.TradeTailor.controller;
+package com.TradeTailor.TradeTailor;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
