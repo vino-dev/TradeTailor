@@ -5,20 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.TradeTailor.TradeTailor.model.QuoteDTO;
-import com.TradeTailor.TradeTailor.service.QuoteService;
+import com.TradeTailor.TradeTailor.model.Watchlist;
+import com.TradeTailor.TradeTailor.service.WatchlistService;
 
 import java.util.List;
 
 @Controller
-public class QuoteController {
+public class WatchListController {
 
     @Autowired
-    private QuoteService quoteService;
+    private WatchlistService quoteService;
 
     @GetMapping("/watchlist")
     public String showWatchlist(Model model) {
-        List<QuoteDTO> quotes = quoteService.getTop20Quotes();
+        List<Watchlist> quotes = quoteService.getTop20Quotes();
         model.addAttribute("quotes", quotes);
         return "watchlist";  // returns watchlist.jsp
     }

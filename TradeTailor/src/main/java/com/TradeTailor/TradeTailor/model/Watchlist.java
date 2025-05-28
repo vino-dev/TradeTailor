@@ -1,6 +1,6 @@
 package com.TradeTailor.TradeTailor.model;
 
-public class QuoteDTO {
+public class Watchlist {
 	 private String symbol;
 	    private String companyName;
 	    private double open;
@@ -10,7 +10,22 @@ public class QuoteDTO {
 	    private long volume;
 	    private double change;
 
-	    // Getters and setters
+	    public Watchlist() {
+			super();
+		}
+		public Watchlist(String symbol, String companyName, double open, double high, double low, double close,
+				long volume, double change) {
+			super();
+			this.symbol = symbol;
+			this.companyName = companyName;
+			this.open = open;
+			this.high = high;
+			this.low = low;
+			this.close = close;
+			this.volume = volume;
+			this.change = change;
+		}
+		// Getters and setters
 	    public String getSymbol() { return symbol; }
 	    public void setSymbol(String symbol) { this.symbol = symbol; }
 
