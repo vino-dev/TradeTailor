@@ -4,11 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Trade Tailor</title>
+<title>Insert title here</title>
 </head>
 <body>
-
-<h1>Welcome to the Trade Tailor... Best for the Advisors..</h1>
 
 </body>
 </html>
