@@ -171,7 +171,7 @@
     </div>
 
     <div class="search-chart-container">
-        <form action="reportgenerate" method="get">
+        <form action="reportgenerate" method="post">
             <input type="text" class="search-box" name="query" placeholder="Search by company">
             <button type="submit" class="search-button">Enter</button>
         </form>
