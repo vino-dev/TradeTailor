@@ -96,7 +96,7 @@
             .then(msg => {
                 alert(msg);
                 if (msg.includes("successful")) {
-                    window.location.href = "/";
+                    window.location.href = "/homepage";
                 }
             })
             .catch(err => {

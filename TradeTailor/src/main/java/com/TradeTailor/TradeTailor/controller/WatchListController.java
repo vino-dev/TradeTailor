@@ -10,16 +10,16 @@ import com.TradeTailor.TradeTailor.service.WatchlistService;
 
 import java.util.List;
 
-@Controller
+@Controller 
 public class WatchListController {
 
-    @Autowired
+    @Autowired 
     private WatchlistService quoteService;
 
     @GetMapping("/watchlist")
     public String showWatchlist(Model model) {
         List<Watchlist> quotes = quoteService.getTop20Quotes();
         model.addAttribute("quotes", quotes);
-        return "watchlist";  // returns watchlist.jsp
+        return "watchlist";  
     }
 }

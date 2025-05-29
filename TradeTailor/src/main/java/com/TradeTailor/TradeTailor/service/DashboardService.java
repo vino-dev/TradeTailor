@@ -1,5 +1,6 @@
 package com.TradeTailor.TradeTailor.service;
 
+import com.TradeTailor.TradeTailor.model.OHLVC;
 import com.TradeTailor.TradeTailor.model.Watchlist;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,8 +74,8 @@ public class DashboardService {
     }
     
     @Cacheable(value = "topQuotes", key = "'top20'", unless = "#result == null || #result.isEmpty()")
-    public List<Watchlist> getTop20Quotes() {
-        List<Watchlist> quotes = new ArrayList<>();
+    public List<OHLVC> getTop20Quotes() {
+        List<OHLVC> quotes = new ArrayList<>();
 
         for (String symbol : TOP_SYMBOLS) {
             try {
@@ -91,12 +92,12 @@ public class DashboardService {
                 double close = quoteJson.path("c").asDouble();
                 double change = quoteJson.path("d").asDouble();
                 long volume = (long) quoteJson.path("v").asDouble();
-                quotes.add(new Watchlist(symbol, companyName, open, high, low, close,volume,change));
+                quotes.add(new OHLVC(symbol, companyName, open, high, low, close,volume,change));
 
             } catch (Exception e) {
                 System.err.println("Error fetching data for symbol " + symbol);
                 e.printStackTrace();
-            }
+            } 
         }
 
         return quotes;

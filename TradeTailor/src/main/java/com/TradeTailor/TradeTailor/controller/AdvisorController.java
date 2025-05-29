@@ -33,4 +33,6 @@ public class AdvisorController {
         boolean success = service.login(body.get("username"), body.get("password"));
         return success ? ResponseEntity.ok("Login successful") : ResponseEntity.status(401).body("Login failed");
     }
+    
+    
 }

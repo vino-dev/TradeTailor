@@ -2,6 +2,7 @@ package com.TradeTailor.TradeTailor.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class AdvisorPageController {
@@ -13,17 +14,20 @@ public class AdvisorPageController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login";  // shows login.jsp
-    }
-
-    @GetMapping("/home")
-    public String showHomePage() {
-        return "home";  // shows home.jsp after successful login
+        return "login";  
     }
     
     @GetMapping("/verify-otp")
     public String showOtpPage() {
         return "verify-otp"; // loads verify-otp.jsp
     }
-
+    
+    @GetMapping("/homepage")
+	public String homepage() {
+		return "homepage";	
+	}
+    @GetMapping("/test") 
+public String getd() {
+    	return "work";
+    }
 }

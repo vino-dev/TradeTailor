@@ -1,5 +1,6 @@
 package com.TradeTailor.TradeTailor.controller;
 
+import com.TradeTailor.TradeTailor.model.OHLVC;
 import com.TradeTailor.TradeTailor.model.Watchlist;
 import com.TradeTailor.TradeTailor.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ public class DashboardController {
     @Autowired
     private DashboardService service;
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public String showMarketDashboard(Model model) {
         List<Map<String, String>> indexData = service.getMarketIndices();
-        List<Watchlist> topQuotes = service.getTop20Quotes();
+        List<OHLVC> topQuotes = service.getTop20Quotes();
 
         model.addAttribute("indices", indexData);
         model.addAttribute("topQuotes", topQuotes);
