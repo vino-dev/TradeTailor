@@ -1,6 +1,8 @@
 package com.TradeTailor.TradeTailor.service;
 
+import com.TradeTailor.TradeTailor.model.CalendarEvent;
 import com.TradeTailor.TradeTailor.model.OHLVC;
+import com.TradeTailor.TradeTailor.model.StockNews;
 import com.TradeTailor.TradeTailor.model.Watchlist;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -25,81 +30,145 @@ public class DashboardService {
             "AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "NVDA", "JPM", "NFLX", "V",
             "BAC", "DIS", "ADBE", "PYPL", "INTC", "CSCO", "CMCSA", "PEP", "KO", "XOM"
         };
-    private static final Map<String, String> indices = Map.of(
-    	    "NIFTY 50", "NSEI",
-    	    "SENSEX", "BSESN",
-    	    "NASDAQ", "IXIC",
-    	    "S&P 500", "SPX",
-    	    "DOW JONES", "DJI"
-    	);
+    private static final String GENERAL_NEWS_URL = "https://finnhub.io/api/v1/news?category=general&token=" + API_KEY;
+    
 
-    public List<Map<String, String>> getMarketIndices() {
-        List<Map<String, String>> indexDataList = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
+    public Map<String, Object> getUSMarketStatus() {
+        Map<String, Object> status = new LinkedHashMap<>();
+       
 
-        for (Map.Entry<String, String> entry : indices.entrySet()) {
-            String url = "https://finnhub.io/api/v1/quote?symbol=" + entry.getValue() + "&token=" + API_KEY;
+        try {
+            String url = "https://finnhub.io/api/v1/stock/market-status?exchange=US&token=" + API_KEY;
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+            JsonNode json = mapper.readTree(response.getBody());
 
-            try {
-                String response = restTemplate.getForObject(url, String.class);
-                if (response == null) continue;
+            boolean isOpen = json.path("isOpen").asBoolean(false);
+            String holiday = json.path("holiday").isNull() ? "No Holiday" : json.path("holiday").asText();
 
-                JsonNode root = mapper.readTree(response);
-                double current = root.path("c").asDouble(0);
-                double previous = root.path("pc").asDouble(0);
+            status.put("isOpen", isOpen);
+            status.put("holiday", holiday);
 
-                double changePercent = previous != 0 ? ((current - previous) / previous) * 100 : 0;
-
-                Map<String, String> indexMap = new HashMap<>();
-                indexMap.put("name", entry.getKey());
-                indexMap.put("value", String.format("%.2f", current));
-                indexMap.put("change", String.format("%.2f%%", changePercent));
-
-                indexDataList.add(indexMap);
-
-            } catch (Exception e) {
-                e.printStackTrace(); 
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            status.put("isOpen", false);
+            status.put("holiday", "Unavailable");
         }
 
-        return indexDataList;
+        return status;
     }
+
+
     
-    @Cacheable(value = "stockProfiles", key = "#symbol")
-    public String getCompanyName(String symbol) throws Exception {
-        String profileUrl = "https://finnhub.io/api/v1/stock/profile2?symbol=" + symbol + "&token=" + API_KEY;
-        ResponseEntity<String> profileResponse = restTemplate.exchange(profileUrl, HttpMethod.GET, null, String.class);
-        JsonNode profileJson = mapper.readTree(profileResponse.getBody());
-        return profileJson.path("name").asText(symbol);
-    }
     
-    @Cacheable(value = "topQuotes", key = "'top20'", unless = "#result == null || #result.isEmpty()")
-    public List<OHLVC> getTop20Quotes() {
-        List<OHLVC> quotes = new ArrayList<>();
+    @Cacheable(value = "topClosePrices", key = "'top20ClosePrices'", unless = "#result == null || #result.isEmpty()")
+    public Map<String, Double> getTop20ClosePrices() {
+        Map<String, Double> closePrices = new LinkedHashMap<>(); // Keeps insertion order
 
         for (String symbol : TOP_SYMBOLS) {
             try {
-                // Fetch quote data
                 String quoteUrl = "https://finnhub.io/api/v1/quote?symbol=" + symbol + "&token=" + API_KEY;
                 ResponseEntity<String> quoteResponse = restTemplate.exchange(quoteUrl, HttpMethod.GET, null, String.class);
                 JsonNode quoteJson = mapper.readTree(quoteResponse.getBody());
 
-                // Fetch company name using cached method
-                String companyName = getCompanyName(symbol);
-                double open = quoteJson.path("o").asDouble();
-                double high = quoteJson.path("h").asDouble();
-                double low = quoteJson.path("l").asDouble();
                 double close = quoteJson.path("c").asDouble();
-                double change = quoteJson.path("d").asDouble();
-                long volume = (long) quoteJson.path("v").asDouble();
-                quotes.add(new OHLVC(symbol, companyName, open, high, low, close,volume,change));
+                closePrices.put(symbol, close);
 
             } catch (Exception e) {
-                System.err.println("Error fetching data for symbol " + symbol);
+                System.err.println("Error fetching close price for symbol " + symbol);
                 e.printStackTrace();
-            } 
+            }
         }
 
-        return quotes;
+        return closePrices;
     }
+    
+    
+    @Cacheable(value = "generalNews", unless = "#result == null || #result.isEmpty()")
+    public List<StockNews> fetchGeneralNews() {
+        List<StockNews> newsList = new ArrayList<>();
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(GENERAL_NEWS_URL, HttpMethod.GET, null, String.class);
+            JsonNode root = mapper.readTree(response.getBody());
+
+            for (JsonNode node : root) {
+                String headline = node.path("headline").asText();
+                String source = node.path("source").asText();
+                String url = node.path("url").asText();
+                long timestamp = node.path("datetime").asLong(0);
+                String datetime = new Date(timestamp * 1000).toString();
+
+                newsList.add(new StockNews(headline, source, url, datetime));
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error fetching general news");
+            e.printStackTrace();
+        }
+
+        return newsList;
+    }
+    
+    private String[] getFromToDates(int daysAhead) {
+        LocalDate today = LocalDate.now();
+        LocalDate futureDate = today.plusDays(daysAhead);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return new String[]{today.format(formatter), futureDate.format(formatter)};
+    }
+
+    public List<CalendarEvent> fetchCombinedCalendar() {
+        List<CalendarEvent> combinedEvents = new ArrayList<>();
+
+        String[] dates = getFromToDates(30);
+        String fromDate = dates[0];
+        String toDate = dates[1];
+
+        // Fetch earnings
+        try {
+            String earningsUrl = "https://finnhub.io/api/v1/calendar/earnings?from=" + fromDate + "&to=" + toDate + "&token=" + API_KEY;
+            String response = restTemplate.getForObject(earningsUrl, String.class);
+            JsonNode root = mapper.readTree(response).path("earningsCalendar");
+
+            if (root.isArray()) {
+                for (JsonNode node : root) {
+                    CalendarEvent event = new CalendarEvent();
+                    event.setDate(node.path("date").asText());
+                    event.setType("Earnings");
+                    event.setTitle(node.path("company").asText() + " (" + node.path("symbol").asText() + ")");
+                    event.setDetails("EPS Estimate: " + node.path("epsEstimate").asText());
+                    combinedEvents.add(event);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Fetch IPOs
+        try {
+            String ipoUrl = "https://finnhub.io/api/v1/calendar/ipo?from=" + fromDate + "&to=" + toDate + "&token=" + API_KEY;
+            String response = restTemplate.getForObject(ipoUrl, String.class);
+            JsonNode root = mapper.readTree(response).path("ipoCalendar");
+
+            if (root.isArray()) {
+                for (JsonNode node : root) {
+                    CalendarEvent event = new CalendarEvent();
+                    event.setDate(node.path("date").asText());
+                    event.setType("IPO");
+                    event.setTitle(node.path("name").asText());
+                    event.setDetails("Exchange: " + node.path("exchange").asText() + ", Shares: " + node.path("shares").asText());
+                    combinedEvents.add(event);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Collections.sort(combinedEvents);
+
+        return combinedEvents;
+    }
+  
 }
+    
+    
+

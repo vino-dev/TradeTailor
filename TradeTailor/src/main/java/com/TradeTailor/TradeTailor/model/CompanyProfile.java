@@ -9,11 +9,6 @@ public class CompanyProfile {
         this.logo = logo;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
+    public String getName() { return name; }
+    public String getLogo() { return logo; }
 }

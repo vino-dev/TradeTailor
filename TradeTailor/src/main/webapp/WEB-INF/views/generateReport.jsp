@@ -1,14 +1,13 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.TradeTailor.TradeTailor.model.Watchlist" %> <!-- Adjust package as needed -->
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Trade Tailor Watchlist</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-     body {
+<meta charset="UTF-8">
+<title>Trade Tailor Generate Report</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+     <style>
+        body {
             margin: 0;
             font-family: Arial, sans-serif;
         }
@@ -140,47 +139,10 @@
         h2 {
             color: #333;
         }
-        .container {
-            width: 95%;
-            margin: 0 auto;
-            text-align: center; /* center children */
-        }
-
-        table {
-            border-collapse: collapse;
-            margin: 20px auto; /* center table */
-            width: auto; /* adjust width to content */
-            min-width: 800px; /* optional: ensure minimum width */
-            max-width: 100%; /* don't overflow container */
-            table-layout: auto; /* auto column widths */
-        }
-img.logo {
-            width: 40px;
-            height: auto;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 8px 12px;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        canvas {
-            max-width: 900px;
-            margin: 30px auto;
-            display: block;
-        }
     </style>
 </head>
 <body>
-<div class="navbar">
+ <div class="navbar">
         <div class="left">
             <div class="hamburger" onclick="toggleSidebar('left')">
                 <i class="fas fa-bars"></i>
@@ -194,7 +156,6 @@ img.logo {
             <a href="logout.jsp">Sign Out</a>
         </div>
     </div>
- 
 
     <!-- Updated Sidebar Links -->
     <div class="sidebar-left" id="leftSidebar">
@@ -213,57 +174,7 @@ img.logo {
             <button type="submit" class="signout-btn">Sign Out</button>
         </form>
     </div>
- 
-<%
-List<Watchlist> quotes = (List<Watchlist>) request.getAttribute("quotes");
-%>
- <br>
-    <br>
-<div class="container">
-<br>
-    <table>
-        <thead>
-        <tr>
-         <th>Logo</th>
-            <th>Symbol</th>
-            <th>Company Name</th>
-            <th>Open</th>
-            <th>High</th>
-            <th>Low</th>
-            <th>Close</th>
-            <th>Change</th>
-            <th>Volume</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-        if (quotes != null) {
-                        for (Watchlist quote : quotes) {
-        %>
-        <tr>
-         <td><img src="<%= quote.getLogoUrl() %>" alt="Logo" class="logo"/></td>
-            <td><a href="stockDetails?symbol=<%= quote.getSymbol() %>"><%= quote.getSymbol() %></a></td>
-            <td><%= quote.getCompanyName() %></td>
-            <td><%= quote.getOpen() %></td>
-            <td><%= quote.getHigh() %></td>
-            <td><%= quote.getLow() %></td>
-            <td><%= quote.getClose() %></td>
-            <td style="color:<%= quote.getChange() >= 0 ? "green" : "red" %>;">
-                <%= quote.getChange() %>
-            </td>
-            <td><%= quote.getVolume() %></td>
-        </tr>
-        <%
-                }
-            }
-        %>
-        </tbody>
-    </table>
-
-   
-</div>
-
- <script>
+    <script>
         function toggleSidebar(side) {
             const leftSidebar = document.getElementById('leftSidebar');
             const accountSidebar = document.getElementById('accountSidebar');
@@ -277,6 +188,5 @@ List<Watchlist> quotes = (List<Watchlist>) request.getAttribute("quotes");
             }
         }
     </script>
-
 </body>
 </html>

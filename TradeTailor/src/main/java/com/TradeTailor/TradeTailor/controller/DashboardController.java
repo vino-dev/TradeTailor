@@ -1,13 +1,12 @@
 package com.TradeTailor.TradeTailor.controller;
 
-import com.TradeTailor.TradeTailor.model.OHLVC;
-import com.TradeTailor.TradeTailor.model.Watchlist;
+import com.TradeTailor.TradeTailor.model.CalendarEvent;
+import com.TradeTailor.TradeTailor.model.StockNews;
 import com.TradeTailor.TradeTailor.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +18,15 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String showMarketDashboard(Model model) {
-        List<Map<String, String>> indexData = service.getMarketIndices();
-        List<OHLVC> topQuotes = service.getTop20Quotes();
-
-        model.addAttribute("indices", indexData);
-        model.addAttribute("topQuotes", topQuotes);
-
+        Map<String, Object> usStatus = service.getUSMarketStatus();
+        model.addAttribute("usStatus", usStatus);
+    	Map<String, Double> closePrices = service.getTop20ClosePrices();
+        model.addAttribute("topQuotes",closePrices);
+        List<StockNews> newsList = service.fetchGeneralNews();
+        model.addAttribute("newsList", newsList);
+        List<CalendarEvent> events = service.fetchCombinedCalendar();
+        model.addAttribute("events", events);
+        
         return "dashboard";
     }
 }

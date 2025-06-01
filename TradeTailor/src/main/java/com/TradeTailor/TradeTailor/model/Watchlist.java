@@ -24,39 +24,13 @@ public class Watchlist {
         this.logoUrl = logoUrl;
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public double getOpen() {
-        return open;
-    }
-
-    public double getHigh() {
-        return high;
-    }
-
-    public double getLow() {
-        return low;
-    }
-
-    public double getClose() {
-        return close;
-    }
-
-    public long getVolume() {
-        return volume;
-    }
-
-    public double getChange() {
-        return change;
-    }
-
-    public String getLogoUrl() {
-        return logoUrl;
-    }
+    public String getSymbol() { return symbol; }
+    public String getCompanyName() { return companyName; }
+    public double getOpen() { return open; }
+    public double getHigh() { return high; }
+    public double getLow() { return low; }
+    public double getClose() { return close; }
+    public long getVolume() { return volume; }
+    public double getChange() { return change; }
+    public String getLogoUrl() { return logoUrl; }
 }
