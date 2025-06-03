@@ -275,7 +275,7 @@
         <div class="title">Trade Tailor</div>
     </div>
     <div class="right">
-        <a href="homepage">Home</a>
+        <a href="home">Home</a>
         <a href="watchlist">Watchlist</a>
         <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
         <a href="logout.jsp">Sign Out</a>

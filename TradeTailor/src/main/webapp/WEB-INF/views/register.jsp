@@ -85,6 +85,7 @@
             <input type="password" name="password" required />
 
             <button type="submit">Register</button>
+             <p>Registered user? <a href="/login">login now</a></p>
         </form>
     </div>
 
