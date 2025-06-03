@@ -53,4 +53,14 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
         // Simple string compare works for yyyy-MM-dd date format
         return this.date.compareTo(other.getDate());
     }
+    @Override
+    public String toString() {
+        return "CalendarEvent{" +
+               "date='" + date + '\'' +
+               ", type='" + type + '\'' +
+               ", title='" + title + '\'' +
+               ", details='" + details + '\'' +
+               '}';
+    }
+
 }

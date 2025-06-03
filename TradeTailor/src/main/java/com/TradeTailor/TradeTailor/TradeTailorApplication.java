@@ -5,8 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.TradeTailor.TradeTailor.config", "com.TradeTailor.TradeTailor.controller",
-		"com.TradeTailor.TradeTailor.model","com.TradeTailor.TradeTailor.service"})
+@ComponentScan(basePackages = {
+	    "com.TradeTailor.TradeTailor.config",
+	    "com.TradeTailor.TradeTailor.controller",
+	    "com.TradeTailor.TradeTailor.model",
+	    "com.TradeTailor.TradeTailor.service",
+	    "com.TradeTailor.TradeTailor.api"  // ✅ Add this line
+	})
 
 public class TradeTailorApplication {
 

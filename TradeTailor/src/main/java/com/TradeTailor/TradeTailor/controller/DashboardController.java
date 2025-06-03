@@ -26,7 +26,11 @@ public class DashboardController {
         model.addAttribute("newsList", newsList);
         List<CalendarEvent> events = service.fetchCombinedCalendar();
         model.addAttribute("events", events);
-        
+        Map<String, String[]> indices =service.getTopIndicesData();
+        Map<String, Long> volumes = service.getTopSymbolsVolumeData();
+
+        model.addAttribute("indices", indices);
+        model.addAttribute("volumes", volumes);
         return "dashboard";
     }
 }

@@ -10,6 +10,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f2f5; /* Added background for consistency */
         }
 
         .navbar {
@@ -73,7 +74,7 @@
         .sidebar-left, .sidebar-account {
             position: fixed;
             top: 60px;
-            height: 100%;
+            height: calc(100% - 60px); /* Adjust to fill remaining height */
             background-color: #333;
             color: white;
             padding: 20px;
@@ -81,6 +82,7 @@
             transition: transform 0.3s ease;
             z-index: 1000;
             box-sizing: border-box;
+            overflow-y: auto; /* Added for scroll if content overflows */
         }
 
         .sidebar-left {
@@ -120,6 +122,18 @@
 
         .content {
             padding: 100px 20px 20px 20px;
+            /* Adjust padding to account for fixed navbar and potentially sidebars */
+            margin-left: 0; /* Default */
+            margin-right: 0; /* Default */
+            transition: margin-left 0.3s ease, margin-right 0.3s ease;
+        }
+
+        .content.sidebar-left-active {
+            margin-left: 220px; /* Shift content when left sidebar is open */
+        }
+
+        .content.sidebar-account-active {
+            margin-right: 220px; /* Shift content when account sidebar is open */
         }
 
         .signout-btn {
@@ -138,11 +152,36 @@
 
         h2 {
             color: #333;
+            text-align: center; /* Center the heading */
+            margin-bottom: 30px; /* Add some space below the heading */
+        }
+
+        /* Styling for the export buttons container */
+        .export-buttons-container {
+            display: flex;
+            justify-content: center; /* Center buttons horizontally */
+            gap: 15px; /* Space between buttons */
+            margin-top: 20px; /* Space from the top of the content area */
+        }
+
+        .export-buttons-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .export-buttons-container button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-<div class="navbar">
+    <div class="navbar">
         <div class="left">
             <div class="hamburger" onclick="toggleSidebar('left')">
                 <i class="fas fa-bars"></i>
@@ -157,14 +196,12 @@
         </div>
     </div>
 
-    <!-- Updated Sidebar Links -->
     <div class="sidebar-left" id="leftSidebar">
         <a href="dashboard">Dashboard</a>
         <a href="generateReport">Generate Report</a>
         <a href="reportCustomizer">Report Customizer</a>
     </div>
 
-    <!-- Account Sidebar -->
     <div class="sidebar-account" id="accountSidebar">
         <h3>Account Info</h3>
         <p><strong>Name:</strong> Santhoshi</p>
@@ -174,19 +211,57 @@
             <button type="submit" class="signout-btn">Sign Out</button>
         </form>
     </div>
+
+    <div class="content" id="mainContent">
+        <h2>Report Customizer</h2>
+        <div class="export-buttons-container">
+            <button onclick="exportCSVServer()">Export CSV (Server)</button>
+            <button onclick="exportExcelServer()">Export Excel (Server)</button>
+            <button onclick="exportPDFServer()">Export PDF (Server)</button>
+        </div>
+        <%-- You can add more customization options here later --%>
+    </div>
+
     <script>
         function toggleSidebar(side) {
             const leftSidebar = document.getElementById('leftSidebar');
             const accountSidebar = document.getElementById('accountSidebar');
+            const mainContent = document.getElementById('mainContent');
 
             if (side === 'left') {
                 leftSidebar.classList.toggle('active');
-                accountSidebar.classList.remove('active');
+                mainContent.classList.toggle('sidebar-left-active');
+                accountSidebar.classList.remove('active'); // Close other sidebar if open
+                mainContent.classList.remove('sidebar-account-active'); // Adjust content margin
             } else if (side === 'account') {
                 accountSidebar.classList.toggle('active');
-                leftSidebar.classList.remove('active');
+                mainContent.classList.toggle('sidebar-account-active');
+                leftSidebar.classList.remove('active'); // Close other sidebar if open
+                mainContent.classList.remove('sidebar-left-active'); // Adjust content margin
             }
         }
-    </script>
+
+        function exportCSVServer() {
+
+window.location.href = "/export/csv1?symbol=${symbol}";
+
+}
+
+
+
+function exportExcelServer() {
+
+window.location.href = "/export/excel1?symbol=${symbol}";
+
+}
+
+function exportPDFServer() {
+
+window.location.href = "/export/pdf1?symbol=${symbol}";
+
+}
+</script>
+
 </body>
+
 </html>
