@@ -1,16 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Trade Tailor Report Customizer</title>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-     <style>
+    <meta charset="UTF-8" />
+    <title>Trade Tailor Report Customizer</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5; /* Added background for consistency */
+            background-color: #f0f2f5;
         }
 
         .navbar {
@@ -18,14 +23,13 @@
             color: white;
             padding: 14px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 999;
             height: 60px;
-            box-sizing: border-box;
+            z-index: 1000;
         }
 
         .navbar .left {
@@ -37,7 +41,6 @@
         .navbar .hamburger {
             font-size: 24px;
             cursor: pointer;
-            color: white;
         }
 
         .navbar .title {
@@ -45,51 +48,37 @@
             font-weight: bold;
         }
 
-        .navbar .right {
-            display: flex;
-            gap: 15px;
-            font-size: 16px;
-            align-items: center;
-        }
-
-        .navbar a, .nav-link-button {
+        .navbar .right a,
+        .nav-link-button {
             color: white;
             text-decoration: none;
-            cursor: pointer;
+            margin-left: 10px;
             padding: 6px 12px;
             border-radius: 4px;
-            font-family: inherit;
             transition: background-color 0.3s ease;
-            border: none;
-            background: none;
-            font-size: 16px;
         }
 
         .navbar a:hover,
         .nav-link-button:hover {
             background-color: #00bfff;
-            color: white;
         }
 
-        .sidebar-left, .sidebar-account {
+        .sidebar-left,
+        .sidebar-account {
             position: fixed;
             top: 60px;
-            height: calc(100% - 60px); /* Adjust to fill remaining height */
+            height: calc(100% - 60px);
+            width: 220px;
             background-color: #333;
             color: white;
             padding: 20px;
-            width: 220px;
+            transform: translateX(-100%);
             transition: transform 0.3s ease;
-            z-index: 1000;
-            box-sizing: border-box;
-            overflow-y: auto; /* Added for scroll if content overflows */
+            z-index: 999;
         }
 
-        .sidebar-left {
-            left: 0;
-            transform: translateX(-100%);
-            display: flex;
-            flex-direction: column;
+        .sidebar-left.active {
+            transform: translateX(0);
         }
 
         .sidebar-account {
@@ -98,170 +87,207 @@
             transform: translateX(100%);
         }
 
-        .sidebar-left.active {
-            transform: translateX(0);
-        }
-
         .sidebar-account.active {
             transform: translateX(0);
         }
 
         .sidebar-left a {
-            display: block;
-            padding: 12px 16px;
             color: white;
-            text-decoration: none;
-            border-radius: 4px;
+            display: block;
             margin-bottom: 10px;
-            transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
         .sidebar-left a:hover {
             background-color: #00bfff;
-        }
-
-        .content {
-            padding: 100px 20px 20px 20px;
-            /* Adjust padding to account for fixed navbar and potentially sidebars */
-            margin-left: 0; /* Default */
-            margin-right: 0; /* Default */
-            transition: margin-left 0.3s ease, margin-right 0.3s ease;
-        }
-
-        .content.sidebar-left-active {
-            margin-left: 220px; /* Shift content when left sidebar is open */
-        }
-
-        .content.sidebar-account-active {
-            margin-right: 220px; /* Shift content when account sidebar is open */
+            padding-left: 5px;
         }
 
         .signout-btn {
             margin-top: 20px;
-            padding: 10px 20px;
             background-color: #ff3333;
             color: white;
+            padding: 10px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+        }
+
+        .content {
+            padding: 80px 20px 20px 20px;
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        .signout-btn:hover {
-            background-color: #cc0000;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center; /* Center the heading */
-            margin-bottom: 30px; /* Add some space below the heading */
-        }
-
-        /* Styling for the export buttons container */
-        .export-buttons-container {
-            display: flex;
-            justify-content: center; /* Center buttons horizontally */
-            gap: 15px; /* Space between buttons */
-            margin-top: 20px; /* Space from the top of the content area */
-        }
-
-        .export-buttons-container button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
+        .submit-btn {
             background-color: #007bff;
             color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease;
         }
 
-        .export-buttons-container button:hover {
+        .submit-btn:hover {
             background-color: #0056b3;
+        }
+
+        #chart-container {
+            margin: 30px auto;
+            max-width: 700px;
+        }
+
+        #preview {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #fafafa;
+        }
+
+        #preview img {
+            width: 400px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="left">
-            <div class="hamburger" onclick="toggleSidebar('left')">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="title">Trade Tailor</div>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="left">
+        <div class="hamburger" onclick="toggleSidebar('left')">
+            <i class="fas fa-bars"></i>
         </div>
-        <div class="right">
-            <a href="homepage">Home</a>
-            <a href="watchlist">Watchlist</a>
-            <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
-            <a href="logout.jsp">Sign Out</a>
+        <div class="title">Trade Tailor</div>
+    </div>
+    <div class="right">
+        <a href="home">Home</a>
+        <a href="watchlist">Watchlist</a>
+        <button class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
+        <a href="logout.jsp">Sign Out</a>
+    </div>
+</div>
+
+<!-- Sidebars -->
+<div class="sidebar-left" id="leftSidebar">
+    <a href="dashboard">Dashboard</a>
+    <a href="generateReport">Generate Report</a>
+    <a href="reportCustomizer">Report Customizer</a>
+</div>
+
+<div class="sidebar-account" id="accountSidebar">
+    <h3>Account Info</h3>
+    <p><strong>Name:</strong> Santhoshi</p>
+    <p><strong>Email:</strong> santhoshi@example.com</p>
+    <p><strong>Phone:</strong> 9876543210</p>
+    <form action="logout.jsp" method="post">
+        <button type="submit" class="signout-btn">Sign Out</button>
+    </form>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <h2>Schedule Your Daily Report</h2>
+
+    <!-- Show success message -->
+    <c:if test="${param.scheduled == 'true'}">
+        <p style="color: green; font-weight: bold;">Report scheduled successfully! You will receive the daily report email at 11 AM.</p>
+    </c:if>
+
+    <form action="/scheduleReportEmail" method="post">
+        <div class="form-group">
+            <label for="email">Enter your email to receive the daily report at 11 AM:</label>
+            <input type="email" id="email" name="email" placeholder="yourname@example.com" required />
         </div>
-    </div>
 
-    <div class="sidebar-left" id="leftSidebar">
-        <a href="dashboard">Dashboard</a>
-        <a href="generateReport">Generate Report</a>
-        <a href="reportCustomizer">Report Customizer</a>
-    </div>
-
-    <div class="sidebar-account" id="accountSidebar">
-        <h3>Account Info</h3>
-        <p><strong>Name:</strong> Santhoshi</p>
-        <p><strong>Email:</strong> santhoshi@example.com</p>
-        <p><strong>Phone:</strong> 9876543210</p>
-        <form action="logout.jsp" method="post">
-            <button type="submit" class="signout-btn">Sign Out</button>
-        </form>
-    </div>
-
-    <div class="content" id="mainContent">
-        <h2>Report Customizer</h2>
-        <div class="export-buttons-container">
-            <button onclick="exportCSVServer()">Export CSV (Server)</button>
-            <button onclick="exportExcelServer()">Export Excel (Server)</button>
-            <button onclick="exportPDFServer()">Export PDF (Server)</button>
+        <div class="form-group">
+            <label for="symbol">Enter stock symbol for the report (e.g. AAPL):</label>
+            <input type="text" id="symbol" name="symbol" placeholder="AAPL" required />
         </div>
-        <%-- You can add more customization options here later --%>
+
+        <button type="submit" class="submit-btn">Schedule Report</button>
+    </form>
+    
+    <div id="chart-container">
+        <canvas id="earningsChart"></canvas>
     </div>
 
-    <script>
-        function toggleSidebar(side) {
-            const leftSidebar = document.getElementById('leftSidebar');
-            const accountSidebar = document.getElementById('accountSidebar');
-            const mainContent = document.getElementById('mainContent');
+    <div id="preview">
+        <h3>Email Preview</h3>
+        <p><strong>Subject:</strong> TradeTailor Daily Report</p>
+        <p><strong>Body:</strong></p>
+        <p>Hi,<br><br>
+            Please find attached your customized stock report with EPS forecast data.<br><br>
+            Regards,<br>Trade Tailor Team
+        </p>
+        <img id="chartPreview" />
+    </div>
+</div>
 
-            if (side === 'left') {
-                leftSidebar.classList.toggle('active');
-                mainContent.classList.toggle('sidebar-left-active');
-                accountSidebar.classList.remove('active'); // Close other sidebar if open
-                mainContent.classList.remove('sidebar-account-active'); // Adjust content margin
-            } else if (side === 'account') {
-                accountSidebar.classList.toggle('active');
-                mainContent.classList.toggle('sidebar-account-active');
-                leftSidebar.classList.remove('active'); // Close other sidebar if open
-                mainContent.classList.remove('sidebar-left-active'); // Adjust content margin
+<script>
+    function toggleSidebar(side) {
+        const leftSidebar = document.getElementById('leftSidebar');
+        const accountSidebar = document.getElementById('accountSidebar');
+        if (side === 'left') {
+            leftSidebar.classList.toggle('active');
+            accountSidebar.classList.remove('active');
+        } else {
+            accountSidebar.classList.toggle('active');
+            leftSidebar.classList.remove('active');
+        }
+    }
+
+    const labels = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"];
+    const data = [2.3, 1.9, 2.5, 3.1, 2.8];
+
+    const ctx = document.getElementById('earningsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'EPS Estimate',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Upcoming Earnings EPS Estimates'
+                }
             }
         }
+    });
 
-        function exportCSVServer() {
-
-window.location.href = "/export/csv1?symbol=${symbol}";
-
-}
-
-
-
-function exportExcelServer() {
-
-window.location.href = "/export/excel1?symbol=${symbol}";
-
-}
-
-function exportPDFServer() {
-
-window.location.href = "/export/pdf1?symbol=${symbol}";
-
-}
+    setTimeout(() => {
+        const base64Image = chart.toBase64Image();
+        document.getElementById('chartPreview').src = base64Image;
+    }, 1000);
 </script>
 
 </body>
-
 </html>

@@ -522,7 +522,7 @@
         <a href="watchlist">Watchlist</a>
         <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
         <button type="button" class="theme-toggle-btn" id="themeToggle">Dark Theme</button> <%-- Added theme toggle button --%>
-        <a href="logout.jsp">Sign Out</a>
+        <a href="logout">Sign Out</a>
     </div>
 </div>
 
@@ -534,17 +534,17 @@
 
 <div class="sidebar-account" id="accountSidebar">
     <h3>Account Info</h3>
-    <p><strong>Name:</strong> Santhoshi</p>
-    <p><strong>Email:</strong> santhoshi@example.com</p>
-    <p><strong>Phone:</strong> 9876543210</p>
-    <form action="logout.jsp" method="post">
+    <p><strong>Name:</strong>${name}</p>
+    <p><strong>Email:</strong>${email}</p>
+    <p><strong>Phone:</strong>${mobile}</p>
+    <form action="logout" method="post">
         <button type="submit" class="signout-btn">Sign Out</button>
     </form>
 </div>
 
 <div class="content">
-    <h2>Welcome, Santhoshi!</h2>
-    <p>This is your Trade Tailor dashboard.</p>
+    <h2>Welcome,${name}</h2>
+    <p>This is your Trade Tailor HomePage.</p>
 </div>
 
 <div class="orbit-container" id="orbit"></div>
@@ -664,4 +664,4 @@
     }
 </script>
 </body>
-</html>
+</html>	
