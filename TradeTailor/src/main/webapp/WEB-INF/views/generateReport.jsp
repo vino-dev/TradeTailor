@@ -10,15 +10,78 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 <style>
+    /* CSS Variables for theming */
+    :root {
+        /* Dark Mode Colors (Default) */
+        --background-color: #1a202c;
+        --text-color: #e2e8f0;
+        --heading-color: #90cdf4;
+        --paragraph-color: #cbd5e0;
+        --navbar-bg: #1a202c;
+        --navbar-link-color: #e2e8f0;
+        --navbar-link-hover-bg: #3182ce;
+        --navbar-icon-color: #90cdf4;
+        --sidebar-bg: #2d3748;
+        --sidebar-link-color: #e2e8f0;
+        --sidebar-link-hover-bg: #3182ce;
+        --signout-btn-bg: #ef4444;
+        --signout-btn-hover-bg: #dc2626;
+        --section-bg: #2d3748; /* Used for content background */
+        --section-heading-color: #90cdf4;
+        --sub-heading-color: #a0aec0;
+        --card-shadow: rgba(0, 0, 0, 0.3);
+        --border-color: #63b3ed; /* Used for table borders and inputs */
+        --table-header-bg: #2d3748; /* Darker header for dark mode table */
+        --table-row-hover-bg: #3a4a5a; /* Hover for table rows */
+        --input-border-color: #4a5568;
+        --input-bg-color: #2d3748;
+        --input-text-color: #e2e8f0;
+        --button-bg-color: #3182ce;
+        --button-hover-bg-color: #0056b3;
+        --chart-label-color: #e2e8f0; /* Color for chart labels and titles */
+    }
+
+    body.light-mode {
+        /* Light Mode Colors */
+        --background-color: #f7fafc;
+        --text-color: #2d3748;
+        --heading-color: #3182ce;
+        --paragraph-color: #4a5568;
+        --navbar-bg: #ffffff;
+        --navbar-link-color: #4a5568;
+        --navbar-link-hover-bg: #ebf8ff;
+        --navbar-icon-color: #3182ce;
+        --sidebar-bg: #edf2f7;
+        --sidebar-link-color: #4a5568;
+        --sidebar-link-hover-bg: #e2e8f0;
+        --signout-btn-bg: #c53030;
+        --signout-btn-hover-bg: #9b2c2c;
+        --section-bg: #ffffff; /* Used for content background */
+        --section-heading-color: #3182ce;
+        --sub-heading-color: #63b3ed;
+        --card-shadow: rgba(0, 0, 0, 0.1);
+        --border-color: #a0aec0; /* Used for table borders and inputs */
+        --table-header-bg: #edf2f7; /* Lighter header for light mode table */
+        --table-row-hover-bg: #f0f4f7; /* Hover for table rows */
+        --input-border-color: #cbd5e0;
+        --input-bg-color: #ffffff;
+        --input-text-color: #2d3748;
+        --button-bg-color: #007BFF;
+        --button-hover-bg-color: #0056b3;
+        --chart-label-color: #4a5568; /* Color for chart labels and titles */
+    }
+
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background-color: #f0f2f5;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .navbar {
-        background-color: #1a1a1a;
-        color: white;
+        background-color: var(--navbar-bg);
+        color: var(--navbar-link-color);
         padding: 14px 20px;
         display: flex;
         align-items: center;
@@ -29,6 +92,8 @@
         z-index: 999;
         height: 60px;
         box-sizing: border-box;
+        box-shadow: 0 2px 8px var(--card-shadow);
+        transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .navbar .left {
@@ -40,12 +105,15 @@
     .navbar .hamburger {
         font-size: 24px;
         cursor: pointer;
-        color: white;
+        color: var(--navbar-icon-color);
+        transition: color 0.3s ease;
     }
 
     .navbar .title {
         font-size: 20px;
         font-weight: bold;
+        color: var(--navbar-icon-color);
+        transition: color 0.3s ease;
     }
 
     .navbar .right {
@@ -56,13 +124,13 @@
     }
 
     .navbar a, .nav-link-button {
-        color: white;
+        color: var(--navbar-link-color);
         text-decoration: none;
         cursor: pointer;
         padding: 6px 12px;
         border-radius: 4px;
         font-family: inherit;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, color 0.3s ease;
         border: none;
         background: none;
         font-size: 16px;
@@ -70,21 +138,40 @@
 
     .navbar a:hover,
     .nav-link-button:hover {
-        background-color: #00bfff;
+        background-color: var(--navbar-link-hover-bg);
+        color: var(--text-color);
+        box-shadow: 0 2px 5px var(--card-shadow);
+    }
+
+    .theme-toggle-btn { /* Add this button style */
+        background-color: var(--navbar-link-hover-bg);
+        color: var(--text-color);
+        padding: 8px 15px;
+        border-radius: 5px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .theme-toggle-btn:hover {
+        background-color: var(--heading-color);
         color: white;
+        box-shadow: 0 2px 5px var(--card-shadow);
     }
 
     .sidebar-left, .sidebar-account {
         position: fixed;
         top: 60px; /* Below navbar */
         height: calc(100% - 60px); /* Fill remaining height */
-        background-color: #333;
-        color: white;
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-link-color);
         padding: 20px;
         width: 220px;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         z-index: 1000;
         box-sizing: border-box;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         overflow-y: auto;
     }
 
@@ -97,7 +184,6 @@
 
     .sidebar-account {
         right: 0;
-        background-color: #444;
         transform: translateX(100%);
     }
 
@@ -112,96 +198,136 @@
     .sidebar-left a {
         display: block;
         padding: 12px 16px;
-        color: white;
+        color: var(--sidebar-link-color);
         text-decoration: none;
         border-radius: 4px;
         margin-bottom: 10px;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .sidebar-left a:hover {
-        background-color: #00bfff;
+        background-color: var(--sidebar-link-hover-bg);
+        color: white;
     }
 
     .signout-btn {
         margin-top: 20px;
         padding: 10px 20px;
-        background-color: #ff3333;
+        background-color: var(--signout-btn-bg);
         color: white;
         border: none;
         cursor: pointer;
         border-radius: 4px;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .signout-btn:hover {
-        background-color: #cc0000;
+        background-color: var(--signout-btn-hover-bg);
+        transform: translateY(-2px);
     }
 
-    /* Heading centering */
-    h2 {
-        color: #333;
-        text-align: center; /* Ensure this is centered */
+    h2, h3 {
+        color: var(--heading-color);
+        text-align: center;
+        transition: color 0.3s ease;
     }
-    h3 {
-        text-align: center; /* Keep h3 centered for "Stock Data Table" */
+
+    .sidebar-account p {
+        margin-bottom: 8px;
+        color: var(--paragraph-color);
+        transition: color 0.3s ease;
     }
 
     .content {
         padding: 70px 20px 20px 20px;
+        background-color: var(--background-color);
+        transition: background-color 0.3s ease;
     }
 
-    /* Search box and button alignment */
     .search-chart-container {
         margin-top: 0;
         margin-bottom: 2rem;
         display: flex;
-        justify-content: center; /* Center the form horizontally */
-        flex-direction: column; /* Keep overall container column */
-        align-items: center; /* Align items within the column */
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 
     .search-chart-container form {
-        display: flex; /* Make form a flex container */
-        flex-direction: row; /* Arrange items in a row (input and button side-by-side) */
-        align-items: center; /* Vertically align input and button */
-        /* Removed gap here as we want them touching */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 
     .search-box {
         padding: 0.5rem;
         width: 300px;
-        border: 1px solid #ccc;
-        border-radius: 5px 0 0 5px; /* Rounded on left, flat on right to connect with button */
+        border: 1px solid var(--input-border-color);
+        border-radius: 5px 0 0 5px;
+        background-color: var(--input-bg-color);
+        color: var(--input-text-color);
+        transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     }
 
     .search-button{
         padding: 0.5rem 1rem;
-        background-color: #2563eb;
+        background-color: var(--button-bg-color);
         color: white;
         border: none;
-        border-radius: 0 5px 5px 0; /* Flat on left, rounded on right */
+        border-radius: 0 5px 5px 0;
         cursor: pointer;
-        margin-left: -1px; /* Pull button left slightly to overlap border */
+        margin-left: -1px;
+        transition: background-color 0.3s ease;
     }
     .search-button:hover {
-        background-color: #0056b3;
+        background-color: var(--button-hover-bg-color);
     }
-    /* End of search box and button adjustments */
 
-    .export-buttons, .range-buttons {
+    /* Combined container for both left and right export sections */
+    .export-sections-container {
         display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 15px 0;
+        justify-content: space-between; /* Pushes content to opposite ends */
+        align-items: flex-start; /* Align items to the top if they have different heights */
+        margin-bottom: 15px; /* Space below the export buttons sections */
+        flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    }
+
+    .export-data-section, .export-report-company-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Space between heading and buttons */
+    }
+
+    .export-buttons-container, .export-buttons-container-right {
+        display: flex;
+        gap: 10px; /* Space between buttons */
+    }
+
+    .export-data-section {
+        align-items: flex-start; /* Align content to the left */
+        margin-left: 20px; /* Adjust as needed for spacing from the left edge */
+    }
+
+    /* Updated CSS for centering the right section's heading */
+    .export-report-company-section {
+        align-items: center; /* Change from flex-end to center to center the group */
+        margin-right: 20px; /* Adjust as needed for spacing from the right edge */
     }
 
     button, label {
         padding: 6px 12px;
-        border: 1px solid #007BFF;
-        background: #007BFF;
+        border: 1px solid var(--button-bg-color);
+        background: var(--button-bg-color);
         color: white;
         border-radius: 4px;
         cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    button:hover {
+        background: var(--button-hover-bg-color);
+        border-color: var(--button-hover-bg-color);
     }
 
     label input { margin-right: 5px;}
@@ -216,14 +342,70 @@
         width: 100%;
         margin-top: 20px;
         border-collapse: collapse;
-        background-color: white;
+        background-color: var(--section-bg);
+        color: var(--text-color);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px var(--card-shadow);
+        transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
 
     th, td {
         padding: 10px;
-        border: 1px solid #ddd;
+        border: 1px solid var(--border-color);
         text-align: center;
+        transition: border-color 0.3s ease, color 0.3s ease;
     }
+
+    th {
+        background-color: var(--table-header-bg);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        font-weight: bold;
+        color: var(--heading-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.05); /* Slightly different background for even rows */
+        transition: background-color 0.3s ease;
+    }
+
+    body.light-mode tbody tr:nth-child(even) {
+         background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    tbody tr:hover {
+        background-color: var(--table-row-hover-bg);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Chart.js specific styles */
+    .chartjs-render-monitor {
+        background-color: var(--section-bg);
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 5px var(--card-shadow);
+    }
+    .section-heading-left, .section-heading-right {
+      color: var(--heading-color);
+       text-align:left; /* Default alignment */
+        transition: color 0.3s ease;
+    }
+    .section-heading-right {
+     text-align:center; /* Overrides default for right-aligned heading */
+     width: 100%; /* Make the heading take full width of its container to center text within it */
+    }
+
+    .range-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
 </style>
 </head>
 <body>
@@ -235,9 +417,10 @@
             <div class="title">Trade Tailor</div>
         </div>
         <div class="right">
-            <a href="homepage">Home</a>
+            <a href="home">Home</a>
             <a href="watchlist">Watchlist</a>
             <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
+            <button type="button" class="theme-toggle-btn" id="themeToggle">Dark Theme</button>
             <a href="logout.jsp">Sign Out</a>
         </div>
     </div>
@@ -266,32 +449,38 @@
             </form>
         </div>
 
-        <%-- This scriptlet block conditionally renders the report section --%>
+        <%-- This scriptlet block conditionally renders the report section --%> 
         <%
             Map<String, Double> stockDataCheck = (Map<String, Double>) request.getAttribute("stockData");
             if (stockDataCheck != null && !stockDataCheck.isEmpty()) {
         %>
-                <h2>Stock Report for ${symbol}</h2> <%-- This heading is now inside the conditional block --%>
+                <h2>Stock Report for ${symbol}</h2>
 
-                <div class="export-buttons">
-                    <button onclick="exportCSVClient()">Export CSV</button>
-                    <button onclick="exportExcelClient()">Export Excel</button>
-                    <button onclick="exportPDFClient()">Export PDF</button>
+                <div class="export-sections-container">
+                    <div class="export-data-section">
+                        <h3 class="section-heading-left">Export Data(Date,price) for 5 years</h3>
+                        <div class="export-buttons-container">
+                            <button class="export-button" onclick="exportCSVClient()">Export CSV</button>
+                            <button class="export-button" onclick="exportExcelClient()">Export Excel</button>
+                            <button class="export-button" onclick="exportPDFClient()">Export PDF</button>
+                        </div>
+                    </div>
 
-                    <button onclick="exportCSVServer()">Export CSV (Server)</button>
-                    <button onclick="exportExcelServer()">Export Excel (Server)</button>
-                    <button onclick="exportPDFServer()">Export PDF (Server)</button>
-
-                    <label><input type="checkbox" id="forecastToggle" onchange="toggleForecast()"> Show Forecast</label>
+                    <div class="export-report-company-section">
+                        <h3 class="section-heading-right">Export Report for Company</h3>
+                        <div class="export-buttons-container-right">
+                            <button onclick="exportCSVServer()">Export CSV</button>
+                            <button onclick="exportExcelServer()">Export Excel</button>
+                            <button onclick="exportPDFServer()">Export PDF</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="range-buttons">
                     <button onclick="filterRange('1D')">1D</button>
                     <button onclick="filterRange('1W')">1W</button>
                     <button onclick="filterRange('1M')">1M</button>
-                    <button onclick="filterRange('6M')">6M</button>
-                    <button onclick="filterRange('1Y')">1Y</button>
-                    <button onclick="filterRange('5Y')">5Y</button>
+                      <label><input type="checkbox" id="forecastToggle" onchange="toggleForecast()"> Show Forecast</label>
                 </div>
 
                 <div id="chart-container">
@@ -361,6 +550,19 @@
         const ctx = document.getElementById('stockChart') ? document.getElementById('stockChart').getContext('2d') : null;
         let stockChart;
 
+        // Function to update chart colors based on theme
+        function updateChartColors() {
+            if (stockChart) {
+                const chartLabelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-label-color').trim();
+                stockChart.options.scales.y.ticks.color = chartLabelColor;
+                stockChart.options.scales.y.title.color = chartLabelColor;
+                stockChart.options.scales.y1.ticks.color = chartLabelColor;
+                stockChart.options.scales.y1.title.color = chartLabelColor;
+                stockChart.options.scales.x.ticks.color = chartLabelColor; // Update x-axis labels as well
+                stockChart.update();
+            }
+        }
+
         // Only initialize Chart.js if the canvas element exists (i.e., data is present)
         if (ctx) {
             stockChart = new Chart(ctx, {
@@ -400,11 +602,39 @@
                     interaction: { mode: 'index', intersect: false },
                     stacked: false,
                     scales: {
-                        y: { position: 'left', title: { display: true, text: 'Price' }},
-                        y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Volume' }}
+                        y: {
+                            position: 'left',
+                            title: { display: true, text: 'Price' },
+                            ticks: { color: 'var(--chart-label-color)' }, // Use CSS variable
+                            title: { display: true, text: 'Price', color: 'var(--chart-label-color)' }, // Use CSS variable
+                            grid: {
+                                color: 'rgba(128, 128, 128, 0.3)' // Keep grid lines slightly visible
+                            }
+                        },
+                        y1: {
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Volume' },
+                            ticks: { color: 'var(--chart-label-color)' }, // Use CSS variable
+                            title: { display: true, text: 'Volume', color: 'var(--chart-label-color)' }, // Use CSS variable
+                        },
+                        x: {
+                            ticks: { color: 'var(--chart-label-color)' }, // Use CSS variable for x-axis
+                            grid: {
+                                color: 'rgba(128, 128, 128, 0.3)' // Keep grid lines slightly visible
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'var(--chart-label-color)' // Use CSS variable for legend labels
+                            }
+                        }
                     }
                 }
             });
+            updateChartColors(); // Initial chart color update
         }
 
         function toggleForecast() {
@@ -443,11 +673,50 @@
         }
 
         function exportPDFClient() {
-            // Note: This URL might need to be adjusted if your server-side PDF export is at a different path
-            window.location.href = "/export/pdf?symbol=${symbol}";
+            // Note: This URL might need to be adjusted if your server-side PDF export logic changes
+            // For client-side PDF, you'd need a library like jsPDF.
+             window.location.href = "/export/pdf?symbol=${symbol}";
+         //   alert('Client-side PDF export requires a dedicated library (e.g., jsPDF) and is not implemented in this example.');
         }
 
-        // New functions for server-side exports
+        // Theme Toggle Logic - Copied from your Home JSP
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                themeToggleBtn.textContent = 'Dark Theme'; // Update button text
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-mode'); // Ensure light-mode class is removed for dark theme
+                themeToggleBtn.textContent = 'Light Theme'; // Update button text
+                localStorage.setItem('theme', 'dark');
+            }
+            updateChartColors(); // Update chart colors when theme changes
+        }
+
+        // Check for saved theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // Default to dark mode if no preference is saved
+                setTheme('dark'); // Explicitly set dark as default
+            }
+        });
+
+        // Event listener for theme toggle button
+        themeToggleBtn.addEventListener('click', () => {
+            if (body.classList.contains('light-mode')) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        });
+
         function exportCSVServer() {
             window.location.href = "/export/csv1?symbol=${symbol}";
         }

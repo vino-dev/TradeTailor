@@ -17,118 +17,249 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
+        /* CSS Variables for theming - Copied from your Home JSP */
+        :root {
+            /* Dark Mode Colors (Default) */
+            --background-color: #1a202c;
+            --text-color: #e2e8f0;
+            --heading-color: #90cdf4;
+            --paragraph-color: #cbd5e0;
+            --navbar-bg: #1a202c;
+            --navbar-link-color: #e2e8f0;
+            --navbar-link-hover-bg: #3182ce;
+            --navbar-icon-color: #90cdf4;
+            --sidebar-bg: #2d3748;
+            --sidebar-link-color: #e2e8f0;
+            --sidebar-link-hover-bg: #3182ce;
+            --signout-btn-bg: #ef4444;
+            --signout-btn-hover-bg: #dc2626;
+            --section-bg: #2d3748; /* Used for section backgrounds */
+            --section-heading-color: #90cdf4;
+            --sub-heading-color: #a0aec0;
+            --card-shadow: rgba(0, 0, 0, 0.3);
+            --border-color: #63b3ed; /* Used for table borders and general borders */
+            --table-header-bg: #2d3748; /* Darker header for dark mode table */
+            --table-row-hover-bg: #3a4a5a; /* Hover for table rows */
+            --input-bg: #4a5568;
+            --input-text-color: #e2e8f0;
+            --input-border-color: #63b3ed;
+            --button-bg: #3182ce;
+            --button-hover-bg: #2b6cb0;
+            --chart-text-color: #e2e8f0; /* Color for chart labels and tooltips in dark mode */
+            --positive-change-color: green;
+            --negative-change-color: red;
         }
 
+        body.light-mode {
+            /* Light Mode Colors - Copied from your Home JSP */
+            --background-color: #f7fafc;
+            --text-color: #2d3748;
+            --heading-color: #3182ce;
+            --paragraph-color: #4a5568;
+            --navbar-bg: #ffffff;
+            --navbar-link-color: #4a5568;
+            --navbar-link-hover-bg: #ebf8ff;
+            --navbar-icon-color: #3182ce;
+            --sidebar-bg: #edf2f7;
+            --sidebar-link-color: #4a5568;
+            --sidebar-link-hover-bg: #e2e8f0;
+            --signout-btn-bg: #c53030;
+            --signout-btn-hover-bg: #9b2c2c;
+            --section-bg: #ffffff; /* Used for section backgrounds */
+            --section-heading-color: #3182ce;
+            --sub-heading-color: #63b3ed;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --border-color: #a0aec0; /* Used for table borders and general borders */
+            --table-header-bg: #edf2f7; /* Lighter header for light mode table */
+            --table-row-hover-bg: #f0f4f7; /* Hover for table rows */
+            --input-bg: #ffffff;
+            --input-text-color: #2d3748;
+            --input-border-color: #a0aec0;
+            --button-bg: #3182ce;
+            --button-hover-bg: #2b6cb0;
+            --chart-text-color: #2d3748; /* Color for chart labels and tooltips in light mode */
+            --positive-change-color: green;
+            --negative-change-color: red;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* General layout and styling for Navbar, Sidebar, Buttons - Consistent with Home JSP */
         .navbar {
-            background-color: #1a202c;
-            color: white;
+            background-color: var(--navbar-bg);
+            color: var(--navbar-link-color);
+            padding: 14px 25px;
             display: flex;
-            justify-content: space-between;
-            padding: 1rem 2rem;
             align-items: center;
-            z-index: 1001;
-            position: relative;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            height: 65px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px var(--card-shadow);
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .navbar .left {
             display: flex;
             align-items: center;
+            gap: 25px;
         }
 
-        .navbar .left .hamburger {
+        .navbar .hamburger {
+            font-size: 26px;
             cursor: pointer;
-            margin-right: 1rem;
-            font-size: 1.2rem;
+            color: var(--navbar-icon-color);
+            transition: color 0.3s ease;
         }
 
-        .navbar .right a,
-        .navbar .right .nav-link-button {
-            color: white;
+        .navbar .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--navbar-icon-color);
+            transition: color 0.3s ease;
+        }
+
+        .navbar .right {
+            display: flex;
+            gap: 20px;
+            font-size: 17px;
+            align-items: center;
+        }
+
+        .navbar a, .nav-link-button {
+            color: var(--navbar-link-color);
             text-decoration: none;
-            margin-left: 1rem;
-            background: none;
-            border: none;
             cursor: pointer;
-            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-family: inherit;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: none;
+            background: none;
+            font-size: 17px;
         }
 
-        .container {
-            padding: 1rem 2rem;
+        .navbar a:hover,
+        .nav-link-button:hover {
+            background-color: var(--navbar-link-hover-bg);
+            color: var(--text-color);
+            box-shadow: 0 2px 5px var(--card-shadow);
         }
+
+        .theme-toggle-btn {
+            background-color: var(--navbar-link-hover-bg);
+            color: var(--text-color);
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--heading-color);
+            color: white;
+            box-shadow: 0 2px 5px var(--card-shadow);
+        }
+
 
         .sidebar-left, .sidebar-account {
             position: fixed;
-            top: 60px;
-            width: 220px;
-            background-color: #1a202c;
-            color: white;
-            height: calc(100% - 60px);
-            padding: 1rem;
-            transition: transform 0.3s ease-in-out;
+            top: 65px;
+            height: calc(100% - 65px);
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-link-color);
+            padding: 20px 0;
+            width: 240px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
             z-index: 1000;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             overflow-y: auto;
         }
 
         .sidebar-left {
             left: 0;
             transform: translateX(-100%);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-account {
             right: 0;
+            background-color: var(--sidebar-bg);
             transform: translateX(100%);
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
-        .sidebar-left.active,
+        .sidebar-left.active {
+            transform: translateX(0);
+        }
+
         .sidebar-account.active {
             transform: translateX(0);
         }
 
-        .sidebar-left a, .sidebar-account a {
-            color: white;
+        .sidebar-left a {
             display: block;
-            margin-bottom: 1rem;
+            padding: 14px 20px;
+            color: var(--sidebar-link-color);
             text-decoration: none;
+            border-radius: 0;
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .sidebar-account h3, .sidebar-account p {
-            margin-bottom: 1rem;
+        .sidebar-left a:hover {
+            background-color: var(--sidebar-link-hover-bg);
+            color: white;
         }
 
         .signout-btn {
-            background-color: #e53e3e;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .search-chart-container {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        .search-box {
-            padding: 0.5rem;
-            width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 5px 0 0 5px;
-        }
-
-        .search-button {
-            padding: 0.5rem 1rem;
-            background-color: #2563eb;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: var(--signout-btn-bg);
             color: white;
             border: none;
-            border-radius: 0 5px 5px 0;
             cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .signout-btn:hover {
+            background-color: var(--signout-btn-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        h3 {
+            color: var(--section-heading-color);
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-account p {
+            margin-bottom: 8px;
+            color: var(--paragraph-color);
+            transition: color 0.3s ease;
+        }
+
+        .container {
+            padding: 1rem 2rem;
+            padding-top: 80px; /* Adjust for fixed navbar */
         }
 
         .content-flexbox {
@@ -158,67 +289,173 @@
         }
 
         .section {
-            background-color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            background-color: var(--section-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--card-shadow);
             margin-bottom: 0; /* Let flexbox gap handle spacing */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .left-column .section {
              margin-bottom: 2rem; /* Restore margin for sections in left column */
         }
 
+        .section h3 {
+            color: var(--section-heading-color);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
         .market-open {
-            color: green;
+            color: var(--positive-change-color);
+            font-weight: bold;
         }
 
         .market-closed {
-            color: red;
+            color: var(--negative-change-color);
+            font-weight: bold;
         }
 
         .label {
             font-weight: bold;
+            color: var(--sub-heading-color);
+            transition: color 0.3s ease;
         }
 
-        .scrollable-box {
-            max-height: 200px;
+        /* News Vertical Scroll specific styles */
+        .news-vertical-scroll-container {
+            max-height: 250px; /* Fixed height for vertical scroll */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Space for scrollbar */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+        }
+
+        .news-vertical-scroll-container ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .news-vertical-scroll-container li {
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .news-vertical-scroll-container li:last-child {
+            border-bottom: none;
+        }
+
+        .news-vertical-scroll-container li a {
+            color: var(--heading-color);
+            text-decoration: none;
+            font-weight: bold;
+            display: block; /* Make the link take full width */
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .news-vertical-scroll-container li a:hover {
+            text-decoration: underline;
+        }
+
+        .news-vertical-scroll-container li small {
+            color: var(--paragraph-color);
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+
+        .scrollable-box { /* This is for Upcoming Events table */
+            max-height: 250px; /* Adjusted height for better scroll */
             overflow-y: auto;
             padding-right: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg); /* Use input background for scrollable areas */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .scrollable-box ul {
             list-style-type: none;
-            padding-left: 0;
+            padding: 0;
+            margin: 0;
         }
 
         .scrollable-box li {
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
+
+        .scrollable-box li:last-child {
+            border-bottom: none;
+        }
+
+        .scrollable-box li a {
+            color: var(--heading-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .scrollable-box li a:hover {
+            text-decoration: underline;
+        }
+
+        .scrollable-box small {
+            color: var(--paragraph-color);
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
 
         .event-table {
             width: 100%;
             border-collapse: collapse;
+            color: var(--text-color);
+            transition: color 0.3s ease;
         }
 
         .event-table th, .event-table td {
-            border: 1px solid #ccc;
-            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            padding: 0.8rem;
             text-align: left;
+            transition: border-color 0.3s ease;
         }
 
         .event-table th {
-            background-color: #f9fafb;
+            background-color: var(--table-header-bg);
+            color: var(--section-heading-color);
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .event-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05); /* Slightly different background for even rows */
+            transition: background-color 0.3s ease;
+        }
+        body.light-mode .event-table tr:nth-child(even) {
+             background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .event-table tr:hover {
+            background-color: var(--table-row-hover-bg);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         /* Chart Wrapper for consistent aspect ratio/height */
         .chart-wrapper {
             position: relative; /* Needed for absolute positioning of canvas */
             width: 100%;
-            /* Option 1: Use a fixed height (e.g., 300px) */
             height: 300px; /* Adjust as needed */
-            /* Option 2: Use padding-bottom for aspect ratio (e.g., 56.25% for 16:9, 75% for 4:3) */
-            /* padding-bottom: 56.25%; /* For 16:9 aspect ratio */
-            /* height: 0; /* Needed for padding-bottom approach */
         }
 
         .chart-wrapper canvas {
@@ -236,8 +473,6 @@
             max-width: 50%;
             padding: 1rem;
             box-sizing: border-box;
-            /* Ensure these also use the chart-wrapper pattern if needed,
-               but direct height on canvas might be sufficient if containers constrain them */
         }
 
         .pie-chart-container .chart-wrapper,
@@ -245,27 +480,47 @@
             height: 300px; /* Or use padding-bottom for aspect ratio */
         }
 
-.indices-wrapper {
+        .indices-wrapper {
             display: flex; /* Enable flexbox for centering */
             justify-content: center; /* Center items horizontally */
             flex-wrap: wrap; /* Allow widgets to wrap to the next line */
             padding: 1rem 2rem 0; /* Maintain padding from the top and sides */
             gap: 15px; /* Space between widgets */
+            padding-top: 80px; /* Space for the fixed navbar */
         }
 
         .index-widget {
-         background-color: white;
-            border: 1px solid #ddd;
-            padding: 5px;
-            margin: 5px;
+            background-color: var(--section-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
             width: 180px;
-            display: inline-block;
             text-align: center;
-            border-radius: 6px;
-            box-shadow: 2px 2px 6px #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--card-shadow);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .positive { color: green; }
-        .negative { color: red; }
+
+        .index-widget h3 {
+            color: var(--heading-color);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .index-widget p {
+            color: var(--paragraph-color);
+            margin-bottom: 3px;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .positive {
+            color: var(--positive-change-color) !important;
+            font-weight: bold;
+        }
+        .negative {
+            color: var(--negative-change-color) !important;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +533,7 @@
         <a href="home">Home</a>
         <a href="watchlist">Watchlist</a>
         <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
+        <button type="button" class="theme-toggle-btn" id="themeToggle">Dark Theme</button>
         <a href="logout.jsp">Sign Out</a>
     </div>
 </div>
@@ -319,13 +575,6 @@
     %>
 </div>
 <div class="container">
-    <div class="search-chart-container">
-        <form action="reportgenerate" method="post">
-            <input type="text" class="search-box" name="query" placeholder="Search by company">
-            <button type="submit" class="search-button">Enter</button>
-        </form>
-    </div>
-
     <div class="content-flexbox">
         <div class="left-column">
             <div class="section">
@@ -347,17 +596,18 @@
 
             <div class="section">
                 <h3>Latest Stock News</h3>
-                <div class="scrollable-box">
+                <div class="news-vertical-scroll-container">
                     <ul>
                         <%
-                            if (newsList != null) {
+                            if (newsList != null && !newsList.isEmpty()) {
                                 for (StockNews news : newsList) {
                         %>
                             <li>
                                 <a href="<%= news.getUrl() %>" target="_blank"><%= news.getHeadline() %></a><br>
                                 <small><%= news.getDatetime() %></small>
                             </li>
-                        <% } } else { %>
+                        <% }
+                        } else { %>
                             <li>No news data available.</li>
                         <% } %>
                     </ul>
@@ -368,25 +618,29 @@
                 <h3>Upcoming Events</h3>
                 <div class="scrollable-box">
                     <table class="event-table">
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Title</th>
-                            <th>Details</th>
-                        </tr>
-                        <%
-                            if (calendarEvents != null) {
-                                for (CalendarEvent event : calendarEvents) {
-                        %>
+                        <thead>
                             <tr>
-                                <td><%= event.getDate() %></td>
-                                <td><%= event.getType() %></td>
-                                <td><%= event.getTitle() %></td>
-                                <td><%= event.getDetails() %></td>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>Details</th>
                             </tr>
-                        <% } } else { %>
-                            <tr><td colspan="4">No events available.</td></tr>
-                        <% } %>
+                        </thead>
+                        <tbody>
+                            <%
+                                if (calendarEvents != null) {
+                                    for (CalendarEvent event : calendarEvents) {
+                            %>
+                                <tr>
+                                    <td><%= event.getDate() %></td>
+                                    <td><%= event.getType() %></td>
+                                    <td><%= event.getTitle() %></td>
+                                    <td><%= event.getDetails() %></td>
+                                </tr>
+                            <% } } else { %>
+                                <tr><td colspan="4">No events available.</td></tr>
+                            <% } %>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -432,6 +686,74 @@
         }
     }
 
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Function to get computed style variable
+    function getCssVariable(variableName) {
+        return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+    }
+
+    // Function to set theme
+    function setTheme(theme) {
+        if (theme === 'light') {
+            body.classList.add('light-mode');
+            themeToggleBtn.textContent = 'Dark Theme'; // Update button text
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.classList.remove('light-mode'); // Ensure light-mode class is removed for dark theme
+            themeToggleBtn.textContent = 'Light Theme'; // Update button text
+            localStorage.setItem('theme', 'dark');
+        }
+        // Update chart colors based on theme
+        updateChartColors();
+    }
+
+    // Function to update chart colors
+    function updateChartColors() {
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const chartLabelColor = getCssVariable('--chart-text-color');
+
+        if (stockChart) {
+            stockChart.options.scales.x.ticks.color = chartLabelColor;
+            stockChart.options.scales.y.ticks.color = chartLabelColor;
+            stockChart.options.plugins.legend.labels.color = chartLabelColor;
+            stockChart.update();
+        }
+        if (pieChart) {
+            pieChart.options.plugins.legend.labels.color = chartLabelColor;
+            pieChart.update();
+        }
+        if (volumeChart) {
+            volumeChart.options.scales.x.ticks.color = chartLabelColor;
+            volumeChart.options.scales.y.ticks.color = chartLabelColor;
+            volumeChart.options.plugins.legend.labels.color = chartLabelColor;
+            volumeChart.update();
+        }
+    }
+
+    // Check for saved theme on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark mode if no preference is saved
+            setTheme('dark'); // Explicitly set dark as default
+        }
+    });
+
+    // Event listener for theme toggle button
+    themeToggleBtn.addEventListener('click', () => {
+        if (body.classList.contains('light-mode')) {
+            setTheme('dark');
+        } else {
+            setTheme('light');
+        }
+    });
+
+
     // Render Stock Price Chart (Line Chart)
     const stockChartCtx = document.getElementById('stockChart').getContext('2d');
     const stockChart = new Chart(stockChartCtx, {
@@ -462,7 +784,22 @@
             maintainAspectRatio: false, // CRITICAL for responsive charts in flexbox
             scales: {
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    ticks: {
+                        color: getCssVariable('--chart-text-color')
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: getCssVariable('--chart-text-color')
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: getCssVariable('--chart-text-color')
+                    }
                 }
             }
         }
@@ -480,7 +817,6 @@
                 <% }} %>
             ],
             datasets: [{
-                label: 'Stock Prices',
                 data: [
                     <% if (topQuotes != null) {
                         for (Double value : topQuotes.values()) { %>
@@ -488,132 +824,99 @@
                     <% }} %>
                 ],
                 backgroundColor: [
-                    '#2563eb',
-                    '#34d399',
-                    '#fbbf24',
-                    '#f87171',
-                    '#60a5fa',
-                    '#a78bfa',
-                    '#f43f5e',
-                    '#10b981',
-                    '#facc15',
-                    '#3b82f6',
-                    '#eab308',
-                    '#be185d',
-                    '#6d28d9',
-                    '#06b6d4',
-                    '#f97316'
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED', '#8AC926', '#FFCA3A', '#6A4C93'
                 ],
-                borderColor: '#fff',
-                borderWidth: 1
+                hoverOffset: 4
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // CRITICAL for responsive charts in flexbox
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'right',
-                },
-                tooltip: {
-                    enabled: true
+                    labels: {
+                        color: getCssVariable('--chart-text-color')
+                    }
                 }
             }
         }
     });
 
-    window.onload = function() {
-        const scrollContainer = document.querySelector('.scrollable-box');
-        if (!scrollContainer) return;
-
-        let scrollAmount = 0;
-        const scrollStep = 1;
-        const scrollInterval = 50;
-
-        function scrollNews() {
-            scrollAmount += scrollStep;
-            const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-            if (scrollAmount >= maxScroll) {
-                scrollAmount = 0;
-            }
-            scrollContainer.scrollTop = scrollAmount;
-        }
-
-        // Only start auto-scrolling if the element is actually scrollable
-        if (scrollContainer.scrollHeight > scrollContainer.clientHeight) {
-            setInterval(scrollNews, scrollInterval);
-        }
-    }
-
-    const symbols = [
-        <%
-            if (volumes != null) {
-                Iterator<String> keys = volumes.keySet().iterator();
-                while (keys.hasNext()) {
-                    String symbol = keys.next();
-                    out.print("'" + symbol + "'");
-                    if (keys.hasNext()) {
-                        out.print(", ");
-                    }
-                }
-            }
-        %>
-    ];
-
-    const volumesData = [
-        <%
-            if (volumes != null) {
-                Iterator<Long> vals = volumes.values().iterator();
-                while (vals.hasNext()) {
-                    Long vol = vals.next();
-                    out.print(vol);
-                    if (vals.hasNext()) {
-                        out.print(", ");
-                    }
-                }
-            }
-        %>
-    ];
-
     // Render Top Symbols Volume (Bar Chart)
-    const volumeChartCtx = document.getElementById('volumeChart').getContext('2d');
-    const volumeChart = new Chart(volumeChartCtx, {
+    const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+    const volumeChart = new Chart(volumeCtx, {
         type: 'bar',
         data: {
-            labels: symbols,
+            labels: [
+                <% if (volumes != null) {
+                    for (String symbol : volumes.keySet()) { %>
+                        "<%= symbol %>",
+                <% }} %>
+            ],
             datasets: [{
                 label: 'Volume',
-                data: volumesData,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                data: [
+                    <% if (volumes != null) {
+                        for (Long vol : volumes.values()) { %>
+                            <%= vol %>,
+                    <% }} %>
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)',
+                    'rgba(199, 199, 199, 0.7)',
+                    'rgba(83, 102, 255, 0.7)',
+                    'rgba(255, 99, 71, 0.7)',
+                    'rgba(60, 179, 113, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(199, 199, 199, 1)',
+                    'rgba(83, 102, 255, 1)',
+                    'rgba(255, 99, 71, 1)',
+                    'rgba(60, 179, 113, 1)'
+                ],
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // CRITICAL for responsive charts in flexbox
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
-                            if(value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-                            if(value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-                            return value;
-                        }
+                        color: getCssVariable('--chart-text-color')
                     }
                 },
                 x: {
-                    autoSkip: false,
-                    maxRotation: 45,
-                    minRotation: 45
+                    ticks: {
+                        color: getCssVariable('--chart-text-color')
+                    }
                 }
             },
             plugins: {
-                legend: { display: true }
+                legend: {
+                    labels: {
+                        color: getCssVariable('--chart-text-color')
+                    }
+                }
             }
         }
     });
+
+    // Initial chart color update on load
+    updateChartColors();
+
 </script>
 
 </body>

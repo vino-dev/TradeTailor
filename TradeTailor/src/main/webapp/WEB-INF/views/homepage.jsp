@@ -2,8 +2,6 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%
-    // Dummy data for demonstration purposes.
-    // In a real application, this data would come from a service or database.
     Map<String, Double> stockData = new java.util.HashMap<>();
     stockData.put("GOOGL", 180.50);
     stockData.put("MSFT", 430.75);
@@ -36,7 +34,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        /* CSS Variables for Dark and Light Mode */
         :root {
             /* Dark Mode Colors (Default) */
             --background-color: #1a202c;
@@ -521,10 +518,10 @@
         <div class="title">Trade Tailor</div>
     </div>
     <div class="right">
-        <a href="homepage">Home</a>
+        <a href="home">Home</a>
         <a href="watchlist">Watchlist</a>
         <button type="button" class="nav-link-button" onclick="toggleSidebar('account')">Account</button>
-        <button type="button" class="theme-toggle-btn" id="themeToggle">Toggle Theme</button> <%-- Added theme toggle button --%>
+        <button type="button" class="theme-toggle-btn" id="themeToggle">Dark Theme</button> <%-- Added theme toggle button --%>
         <a href="logout.jsp">Sign Out</a>
     </div>
 </div>
@@ -560,7 +557,12 @@
     <div class="video-content-wrapper">
         <div class="video-player-container">
             <div class="video-responsive">
-                <iframe src="https://www.youtube.com/watch?v=ecrJn3g7gZY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+               <iframe width="560" height="315"
+  src="https://www.youtube.com/embed/ecrJn3g7gZY"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
             </div>
             <p class="video-description">Learn about StockEdge offerings and how it can be leveraged to Identify Opportunities in Trading and Investing.</p>
         </div>
