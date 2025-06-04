@@ -13,6 +13,8 @@ import com.TradeTailor.TradeTailor.service.AdvisorService;
 import com.TradeTailor.TradeTailor.service.StockServiceInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/api")
 public class AdvisorController {
@@ -35,9 +37,18 @@ public class AdvisorController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> body) {
-        boolean success = adser.login(body.get("username"), body.get("password"));
-        return success ? ResponseEntity.ok("Login successful") : ResponseEntity.status(401).body("Login failed");
+    public ResponseEntity<String> login(@RequestBody Map<String, String> body, HttpSession session) {
+        String username = body.get("username");
+        String password = body.get("password");
+
+        Advisor advisor = adser.validateLogin(username, password);
+
+        if (advisor != null) {
+            session.setAttribute("loggedInAdvisor", advisor); // store full advisor in session
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Login failed");
+        }
     }
     
    

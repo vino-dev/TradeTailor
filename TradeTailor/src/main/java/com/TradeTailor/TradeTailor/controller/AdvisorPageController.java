@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.TradeTailor.TradeTailor.Entity.Advisor;
 import com.TradeTailor.TradeTailor.service.*;
 
 import java.text.DecimalFormat;
@@ -54,10 +56,30 @@ public class AdvisorPageController {
     }
 
     @GetMapping("/home")
-    public String home(Model model) {
-        Map<String, Double> stockData = stockServiceInter.getStockPerformanceData(); // {"AAPL": 2.5, "GOOG": -1.2}
+    public String home(HttpSession session, Model model) {
+        Advisor advisor = (Advisor) session.getAttribute("loggedInAdvisor");
+        if (advisor == null) {
+            return "login";
+        }
+
+        // Stock performance data
+        Map<String, Double> stockData = stockServiceInter.getStockPerformanceData();
         model.addAttribute("stockData", stockData);
-        return "homepage"; // maps to homepage.jsp
+
+        // Add advisor details to model
+        model.addAttribute("name", advisor.getName());
+        model.addAttribute("email", advisor.getEmail());
+        model.addAttribute("mobile", advisor.getMobile());
+
+        return "homepage"; // JSP will use ${name}, ${email}, etc.
+    }
+    //dsfghsdavdvafgds
+    //dfgh
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); 
+        return "login"; // redirect user to login page after logout
     }
     
     @GetMapping("/export/pdf")

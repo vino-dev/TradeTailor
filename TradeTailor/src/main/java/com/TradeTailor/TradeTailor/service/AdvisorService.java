@@ -90,4 +90,17 @@ public class AdvisorService {
         message.setText("Dear Advisor,\n\nYour OTP is: " + otp + "\nThis OTP will expire in 5 minutes.\n\nThanks,\nTradeTailor Team");
         mailSender.send(message);
     }
+    
+    public Advisor validateLogin(String username, String rawPassword) {
+        Optional<Advisor> optionalAdvisor = advisorRepository.findByUsername(username);
+
+        if (optionalAdvisor.isPresent()) {
+            Advisor advisor = optionalAdvisor.get();
+            if (passwordEncoder.matches(rawPassword, advisor.getPassword())) {
+                return advisor;
+            }
+        }
+
+        return null;
+    }
 }

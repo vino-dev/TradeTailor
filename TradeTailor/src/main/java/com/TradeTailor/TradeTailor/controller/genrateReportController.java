@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.TradeTailor.TradeTailor.Entity.Advisor;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class genrateReportController {
 
@@ -66,8 +70,15 @@ public class genrateReportController {
 	        return "generateReport"; // maps to generatereport.jsp
 	    }
 
-	    @GetMapping("/generateReport") // Changed to /generateReport for consistency with JSP form action
-	    public String showInitialReportPage(Model model) {
+	  @GetMapping("/generateReport") // Changed to /generateReport for consistency with JSP form action
+	    public String showInitialReportPage(HttpSession session,Model model) {
+	    	 Advisor advisor = (Advisor) session.getAttribute("loggedInAdvisor");
+	         if (advisor == null) {
+	             return "login";
+	         }
+	         model.addAttribute("name", advisor.getName());
+	         model.addAttribute("email", advisor.getEmail());
+	         model.addAttribute("mobile", advisor.getMobile());
 	        return "generateReport"; // This maps to generateReport.jsp
 	    }
 }
