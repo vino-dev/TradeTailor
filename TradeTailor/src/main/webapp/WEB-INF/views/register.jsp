@@ -74,6 +74,9 @@
 
             <label>Email:</label>
             <input type="email" name="email" required />
+            
+             <label>Pan:</label>
+            <input type="text" name="pan" required />
 
             <label>Mobile:</label>
             <input type="text" name="mobile" required />
